@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminPanelRouteImport } from './routes/admin._panel'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminPanelBookingsRouteImport } from './routes/admin._panel.bookings'
 import { Route as AdminPanelContentRouteImport } from './routes/admin._panel.content'
@@ -27,65 +29,77 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPanelRoute = AdminPanelRouteImport.update({
+  id: '/admin/_panel',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPanelBookingsRoute = AdminPanelBookingsRouteImport.update({
-  id: '/admin/_panel/bookings',
-  path: '/admin/bookings',
-  getParentRoute: () => rootRouteImport,
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelContentRoute = AdminPanelContentRouteImport.update({
-  id: '/admin/_panel/content',
-  path: '/admin/content',
-  getParentRoute: () => rootRouteImport,
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelCustomersRoute = AdminPanelCustomersRouteImport.update({
-  id: '/admin/_panel/customers',
-  path: '/admin/customers',
-  getParentRoute: () => rootRouteImport,
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelDashboardRoute = AdminPanelDashboardRouteImport.update({
-  id: '/admin/_panel/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => rootRouteImport,
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelEnquiriesRoute = AdminPanelEnquiriesRouteImport.update({
-  id: '/admin/_panel/enquiries',
-  path: '/admin/enquiries',
-  getParentRoute: () => rootRouteImport,
+  id: '/enquiries',
+  path: '/enquiries',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelGalleryRoute = AdminPanelGalleryRouteImport.update({
-  id: '/admin/_panel/gallery',
-  path: '/admin/gallery',
-  getParentRoute: () => rootRouteImport,
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelIndustriesRoute = AdminPanelIndustriesRouteImport.update({
-  id: '/admin/_panel/industries',
-  path: '/admin/industries',
-  getParentRoute: () => rootRouteImport,
+  id: '/industries',
+  path: '/industries',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelServicesRoute = AdminPanelServicesRouteImport.update({
-  id: '/admin/_panel/services',
-  path: '/admin/services',
-  getParentRoute: () => rootRouteImport,
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelSettingsRoute = AdminPanelSettingsRouteImport.update({
-  id: '/admin/_panel/settings',
-  path: '/admin/settings',
-  getParentRoute: () => rootRouteImport,
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 const AdminPanelTestimonialsRoute = AdminPanelTestimonialsRouteImport.update({
-  id: '/admin/_panel/testimonials',
-  path: '/admin/testimonials',
-  getParentRoute: () => rootRouteImport,
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => AdminPanelRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminPanelRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/bookings': typeof AdminPanelBookingsRoute
   '/admin/content': typeof AdminPanelContentRoute
   '/admin/customers': typeof AdminPanelCustomersRoute
@@ -99,6 +113,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminPanelBookingsRoute
   '/admin/content': typeof AdminPanelContentRoute
@@ -114,7 +129,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/_panel': typeof AdminPanelRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/_panel/bookings': typeof AdminPanelBookingsRoute
   '/admin/_panel/content': typeof AdminPanelContentRoute
   '/admin/_panel/customers': typeof AdminPanelCustomersRoute
@@ -130,7 +147,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/admin/login'
+    | '/admin/'
     | '/admin/bookings'
     | '/admin/content'
     | '/admin/customers'
@@ -144,6 +163,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/admin/login'
     | '/admin/bookings'
     | '/admin/content'
@@ -158,7 +178,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin/_panel'
     | '/admin/login'
+    | '/admin/'
     | '/admin/_panel/bookings'
     | '/admin/_panel/content'
     | '/admin/_panel/customers'
@@ -173,7 +195,115 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminPanelRoute: typeof AdminPanelRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/_panel': {
+      id: '/admin/_panel'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/_panel/bookings': {
+      id: '/admin/_panel/bookings'
+      path: '/bookings'
+      fullPath: '/admin/bookings'
+      preLoaderRoute: typeof AdminPanelBookingsRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/content': {
+      id: '/admin/_panel/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminPanelContentRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/customers': {
+      id: '/admin/_panel/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminPanelCustomersRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/dashboard': {
+      id: '/admin/_panel/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminPanelDashboardRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/enquiries': {
+      id: '/admin/_panel/enquiries'
+      path: '/enquiries'
+      fullPath: '/admin/enquiries'
+      preLoaderRoute: typeof AdminPanelEnquiriesRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/gallery': {
+      id: '/admin/_panel/gallery'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminPanelGalleryRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/industries': {
+      id: '/admin/_panel/industries'
+      path: '/industries'
+      fullPath: '/admin/industries'
+      preLoaderRoute: typeof AdminPanelIndustriesRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/services': {
+      id: '/admin/_panel/services'
+      path: '/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminPanelServicesRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/settings': {
+      id: '/admin/_panel/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminPanelSettingsRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+    '/admin/_panel/testimonials': {
+      id: '/admin/_panel/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminPanelTestimonialsRouteImport
+      parentRoute: typeof AdminPanelRoute
+    }
+  }
+}
+
+interface AdminPanelRouteChildren {
   AdminPanelBookingsRoute: typeof AdminPanelBookingsRoute
   AdminPanelContentRoute: typeof AdminPanelContentRoute
   AdminPanelCustomersRoute: typeof AdminPanelCustomersRoute
@@ -186,98 +316,7 @@ export interface RootRouteChildren {
   AdminPanelTestimonialsRoute: typeof AdminPanelTestimonialsRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/bookings': {
-      id: '/admin/_panel/bookings'
-      path: '/admin/bookings'
-      fullPath: '/admin/bookings'
-      preLoaderRoute: typeof AdminPanelBookingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/content': {
-      id: '/admin/_panel/content'
-      path: '/admin/content'
-      fullPath: '/admin/content'
-      preLoaderRoute: typeof AdminPanelContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/customers': {
-      id: '/admin/_panel/customers'
-      path: '/admin/customers'
-      fullPath: '/admin/customers'
-      preLoaderRoute: typeof AdminPanelCustomersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/dashboard': {
-      id: '/admin/_panel/dashboard'
-      path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminPanelDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/enquiries': {
-      id: '/admin/_panel/enquiries'
-      path: '/admin/enquiries'
-      fullPath: '/admin/enquiries'
-      preLoaderRoute: typeof AdminPanelEnquiriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/gallery': {
-      id: '/admin/_panel/gallery'
-      path: '/admin/gallery'
-      fullPath: '/admin/gallery'
-      preLoaderRoute: typeof AdminPanelGalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/industries': {
-      id: '/admin/_panel/industries'
-      path: '/admin/industries'
-      fullPath: '/admin/industries'
-      preLoaderRoute: typeof AdminPanelIndustriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/services': {
-      id: '/admin/_panel/services'
-      path: '/admin/services'
-      fullPath: '/admin/services'
-      preLoaderRoute: typeof AdminPanelServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/settings': {
-      id: '/admin/_panel/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminPanelSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/_panel/testimonials': {
-      id: '/admin/_panel/testimonials'
-      path: '/admin/testimonials'
-      fullPath: '/admin/testimonials'
-      preLoaderRoute: typeof AdminPanelTestimonialsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
-}
-
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AdminLoginRoute: AdminLoginRoute,
+const AdminPanelRouteChildren: AdminPanelRouteChildren = {
   AdminPanelBookingsRoute: AdminPanelBookingsRoute,
   AdminPanelContentRoute: AdminPanelContentRoute,
   AdminPanelCustomersRoute: AdminPanelCustomersRoute,
@@ -288,6 +327,17 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPanelServicesRoute: AdminPanelServicesRoute,
   AdminPanelSettingsRoute: AdminPanelSettingsRoute,
   AdminPanelTestimonialsRoute: AdminPanelTestimonialsRoute,
+}
+
+const AdminPanelRouteWithChildren = AdminPanelRoute._addFileChildren(
+  AdminPanelRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AdminPanelRoute: AdminPanelRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
