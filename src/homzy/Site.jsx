@@ -179,7 +179,7 @@ function Why() {
 }
 
 function Work() {
-  const gallery = useStore("gallery");
+  const gallery = useStore("gallery").filter((g) => g.published !== false);
   const [cat, setCat] = useState("All");
   const [preview, setPreview] = useState(null);
   const cats = ["All", ...new Set(gallery.map((g) => g.category))];
