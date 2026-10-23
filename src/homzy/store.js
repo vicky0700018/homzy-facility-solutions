@@ -21,7 +21,7 @@ const SEED_SERVICES = [
   id: `svc-${i + 1}`, title, category, image: u(img), description, benefits, price: "Request a Quote", published: true,
 }));
 
-export const INDUSTRIES = [
+const SEED_INDUSTRIES = [
   ["Residential Societies", "photo-1460317442991-0ec209397118", "Common-area care, housekeeping and maintenance for gated communities."],
   ["Corporate Offices", "photo-1497366811353-6870744d04b2", "Clean, well-run workplaces that keep teams productive."],
   ["Retail and Commercial Spaces", "photo-1441986300917-64674bd600d8", "Customer-ready floors, glass and washrooms all day long."],
@@ -29,7 +29,7 @@ export const INDUSTRIES = [
   ["Healthcare Facilities", "photo-1519494026892-80bbd2d6fd0d", "Hygiene-focused support for clinics and care centres."],
   ["Industrial Buildings", "photo-1565793298595-6a879b1d9492", "Workforce and upkeep support for plants and warehouses."],
   ["Hospitality Properties", "photo-1566073771259-6a8506099945", "Guest-ready housekeeping for hotels and serviced stays."],
-].map(([title, img, description]) => ({ title, image: u(img), description }));
+].map(([title, img, description], i) => ({ id: `ind-${i + 1}`, title, image: u(img), description, published: true }));
 
 const SEED_GALLERY = [
   ["Corporate Lobby Refresh (Sample)", "Commercial", "photo-1497366754035-f200968a6e72"],
@@ -74,7 +74,7 @@ const SEED_ENQUIRIES = [
 ];
 
 const KEY = "homzy-demo-v1";
-const SEEDS = { services: SEED_SERVICES, bookings: SEED_BOOKINGS, enquiries: SEED_ENQUIRIES, testimonials: SEED_TESTIMONIALS, gallery: SEED_GALLERY, content: SEED_CONTENT, settings: { notifyEmail: "", bookingPrefix: "HOM" } };
+const SEEDS = { services: SEED_SERVICES, bookings: SEED_BOOKINGS, enquiries: SEED_ENQUIRIES, testimonials: SEED_TESTIMONIALS, gallery: SEED_GALLERY, industries: SEED_INDUSTRIES, content: SEED_CONTENT, settings: { notifyEmail: "", bookingPrefix: "HOM" } };
 
 let state = null;
 let ui = { bookingOpen: false, preService: null, admin: false };
@@ -155,8 +155,27 @@ export function customersFrom(bookings) {
 export const STATUSES = ["New", "Confirmed", "In Progress", "Completed", "Cancelled"];
 export const isValidPhone = (p) => /^(\+?91[\s-]?)?[6-9]\d{9}$/.test(p.replace(/[\s-]/g, ""));
 
-export function toCSV(rows) {
-  const cols = ["id", "name", "phone", "email", "company", "propertyType", "category", "service", "address", "city", "date", "time", "frequency", "status", "notes", "createdAt"];
+export const BOOKING_COLS = ["id", "name", "phone", "email", "company", "propertyType", "category", "service", "address", "city", "date", "time", "frequency", "size", "staff", "requirements", "contactMethod", "status", "notes", "createdAt"];
+export function toCSV(rows, cols = BOOKING_COLS) {
   const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   return [cols.join(","), ...rows.map((r) => cols.map((c) => esc(r[c])).join(","))].join("\n");
 }
+export function downloadFile(text, name, type = "text/csv;charset=utf-8") {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = document.createElement("a");
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Generic list helpers used by the admin panel.
+export const patchItem = (key, id, patch) => update(key, (l) => l.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+export const removeItem = (key, id) => update(key, (l) => l.filter((x) => x.id !== id));
+export function saveItem(key, item, prefix) {
+  if (item.id) return patchItem(key, item.id, item);
+  update(key, (l) => [{ ...item, id: `${prefix}-${uid()}` }, ...l]);
+}
+export const setContent = (patch) => update("content", (c) => ({ ...c, ...patch }));
+export const removeSamples = () => { update("bookings", (l) => l.filter((x) => !x.sample)); update("enquiries", (l) => l.filter((x) => !x.sample)); };
+export const getAll = () => load();
+export function resetAll() { state = structuredClone(SEEDS); save(); emit(); }
+export const DEFAULT_CONTENT = SEED_CONTENT;
