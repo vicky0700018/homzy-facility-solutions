@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Icon, Img, Modal, Field, Logo } from "./ui.jsx";
 import BookingModal from "./BookingModal.jsx";
-import { useStore, openBooking, INDUSTRIES, addEnquiry, isValidPhone } from "./store.js";
+import { useStore, openBooking, addEnquiry, isValidPhone } from "./store.js";
 import hero from "@/assets/hero.jpg";
 import about from "@/assets/about.jpg";
 
@@ -136,13 +136,15 @@ function Services() {
 }
 
 function Industries() {
+  const industries = useStore("industries").filter((x) => x.published !== false);
   return (
     <section id="industries" className="py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Heading eyebrow="Industries We Serve" title="Built for every kind of property" />
+        {industries.length === 0 && <p className="text-center text-muted-foreground">Industries will be listed soon.</p>}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {INDUSTRIES.map((ind, i) => (
-            <article key={ind.title} className={`group relative overflow-hidden rounded-lg ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
+          {industries.map((ind, i) => (
+            <article key={ind.id} className={`group relative overflow-hidden rounded-lg ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
               <Img src={ind.image} alt={ind.title} className={`${i === 0 ? "aspect-square lg:h-full" : "aspect-[4/3]"} transition duration-500 group-hover:scale-105`} />
               <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-navy-deep/90 via-navy-deep/30 to-transparent p-5">
                 <h3 className="text-lg font-bold text-secondary-foreground">{ind.title}</h3>

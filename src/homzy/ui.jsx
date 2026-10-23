@@ -41,6 +41,7 @@ export function Icon({ name, className = "h-5 w-5" }) {
 
 export function Img({ src, alt, className = "", eager = false }) {
   const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [src]);
   return (
     <div className={`img-fallback overflow-hidden ${className}`}>
       {!failed && src ? (
