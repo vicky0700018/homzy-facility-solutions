@@ -111,3 +111,70 @@ const STATUS_CLS = {
 export function StatusBadge({ status }) {
   return <span className={`inline-block whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_CLS[status] || ""}`}>{status}</span>;
 }
+
+export const fmtDateTime = (d) => (d ? new Date(d).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—");
+
+export function Confirm({ open, title = "Are you sure?", text, confirmLabel = "Delete", onConfirm, onClose }) {
+  return (
+    <Modal open={open} onClose={onClose} title={title}>
+      <p className="text-sm text-muted-foreground">{text}</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <button className="btn btn-outline" onClick={onClose}>Cancel</button>
+        <button className="btn btn-danger" onClick={() => { onConfirm(); onClose(); }}>{confirmLabel}</button>
+      </div>
+    </Modal>
+  );
+}
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 1000 / img.width);
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.75));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read image")); };
+    img.src = url;
+  });
+}
+
+export function ImageField({ value = "", onChange }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const isData = value.startsWith("data:");
+  async function onFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setBusy(true); setErr("");
+    try { onChange(await compressImage(file)); } catch { setErr("That file could not be used as an image."); }
+    setBusy(false);
+  }
+  return (
+    <div className="flex gap-3">
+      <Img src={value} alt="Image preview" className="h-20 w-28 shrink-0 rounded-md border border-border" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <input className="field" value={isData ? "" : value} onChange={(e) => onChange(e.target.value)} placeholder={isData ? "Uploaded image (paste a link to replace)" : "Paste an image link (https://…)"} />
+        <label className="btn btn-outline cursor-pointer px-3 py-1.5 text-xs">
+          <Icon name="image" className="h-4 w-4" />{busy ? "Processing…" : "Upload from device"}
+          <input type="file" accept="image/*" className="sr-only" onChange={onFile} />
+        </label>
+        {err && <span className="block text-xs text-destructive">{err}</span>}
+      </div>
+    </div>
+  );
+}
+
+export function Toggle({ checked, onChange, label }) {
+  return (
+    <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition ${checked ? "bg-primary" : "bg-input"}`}>
+      <span className={`inline-block h-5 w-5 rounded-full bg-background shadow transition ${checked ? "translate-x-5" : "translate-x-0.5"}`} />
+    </button>
+  );
+}

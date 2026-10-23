@@ -141,3 +141,5 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @utility btn-gold { background: var(--gold); color: var(--navy-deep); &:hover{ filter: brightness(.95);} }
 @utility field { width:100%; border:1px solid var(--input); border-radius: calc(var(--radius) - 2px); padding:.6rem .75rem; font-size:.9rem; background: var(--background); &:focus{ outline:none; border-color: var(--primary); box-shadow: 0 0 0 3px oklch(0.6 0.11 182 / 18%);} }
 @utility card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+@utility btn-danger { background: var(--destructive); color: var(--destructive-foreground); &:hover{ filter: brightness(.92);} }
+@utility btn-sm { padding: .4rem .75rem; font-size: .8rem; }
